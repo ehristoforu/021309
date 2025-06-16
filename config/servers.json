@@ -1,0 +1,28 @@
+{
+  "servers": [
+    {
+      "country": "🇳🇱 Нидерланды",
+      "key": "ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTpiV3hscGUwd3I5TnlVWW11dng3NGtk@195.26.227.4:25421/?outline=1#BaikalVPN:🇳🇱Netherlands"
+    },
+    {
+      "country": "🇩🇪 Германия",
+      "key": "ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTp3SWY5ZVYxQjFGMjh3ZmNGZVBEVlVL@150.241.69.126:3452#BaikalVPN:🇩🇪Germany"
+    },
+    {
+      "country": "🇺🇸 США",
+      "key": "ss://YWVzLTEyOC1nY206c2hhZG93c29ja3M3@37.19.198.244:443#BaikalVPN:🇺🇸USA"
+    },
+    {
+      "country": "🇰🇿 Казахстан",
+      "key": "ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTpoMVU0a09MbzFMTXRDdmV5emRVNmVj@91.217.10.60:1090#BaikalVPN:🇰🇿Kazakhstan"
+    },
+    {
+      "country": "🇸🇬 Сингапур",
+      "key": "ss://YWVzLTI1Ni1nY206bWR1a2lOUnEzZmN6Nnk5YQ==@91.242.241.45:8388#BaikalVPN:🇸🇬Singapore"
+    },
+    {
+      "country": "🇷🇺 Россия",
+      "key": "ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTozNjBlMjFkMjE5NzdkYzEx@45.139.24.24:57456#BaikalVPN:🇷🇺Russia"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "blockedResources": [
+    { "name": "Facebook", "status": "заблокирован", "color": "bg-red-500", "icon": "👥" },
+    { "name": "Instagram", "status": "заблокирован", "color": "bg-red-500", "icon": "📷" },
+    { "name": "Twitter/X", "status": "заблокирован", "color": "bg-red-500", "icon": "🐦" },
+    { "name": "LinkedIn", "status": "заблокирован", "color": "bg-red-500", "icon": "💼" },
+    { "name": "Telegram", "status": "был заблокирован", "color": "bg-yellow-500", "icon": "💬" },
+    { "name": "Rutracker", "status": "заблокирован", "color": "bg-red-500", "icon": "🏴‍☠️" },
+    { "name": "Pornhub", "status": "заблокирован", "color": "bg-red-500", "icon": "🔞" },
+    { "name": "Pornolab", "status": "заблокирован", "color": "bg-red-500", "icon": "🔞" },
+    { "name": "Patreon", "status": "заблокирован", "color": "bg-red-500", "icon": "💰" },
+    { "name": "Discord", "status": "заблокирован", "color": "bg-red-500", "icon": "🎮" },
+    { "name": "SoundCloud", "status": "заблокирован", "color": "bg-red-500", "icon": "🎵" },
+    { "name": "Metacritic", "status": "заблокирован", "color": "bg-red-500", "icon": "🎯" },
+    { "name": "Фикбук", "status": "заблокирован", "color": "bg-red-500", "icon": "📚" },
+    { "name": "Viber", "status": "заблокирован", "color": "bg-red-500", "icon": "📞" },
+    { "name": "Dailymotion", "status": "заблокирован", "color": "bg-red-500", "icon": "📹" },
+    { "name": "Reddit", "status": "был заблокирован", "color": "bg-yellow-500", "icon": "🤖" },
+    { "name": "Ычан", "status": "заблокирован", "color": "bg-red-500", "icon": "🎭" },
+    { "name": "Настоящее время", "status": "заблокирован", "color": "bg-red-500", "icon": "📻" },
+    { "name": "РуНет", "status": "замедлен", "color": "bg-yellow-500", "icon": "🌐" },
+    { "name": "OpenVPN", "status": "заблокирован", "color": "bg-red-500", "icon": "🔒" },
+    { "name": "WireGuard", "status": "заблокирован", "color": "bg-red-500", "icon": "🔒" },
+    { "name": "YouTube", "status": "замедлен", "color": "bg-yellow-500", "icon": "📺" },
+    { "name": "Meduza", "status": "заблокирована", "color": "bg-red-500", "icon": "📰" },
+    { "name": "OpenAI", "status": "заблокирован", "color": "bg-red-500", "icon": "🤖" }
+  ]
+}
