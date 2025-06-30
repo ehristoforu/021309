@@ -149,16 +149,6 @@ export default function InternetStatusPage() {
 
   return (
     <div className="min-h-screen bg-black text-white relative overflow-hidden">
-      {/* Abstract Background Shapes */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-10 left-10 w-16 h-16 border border-white/10 rounded-full abstract-shape animate-float"></div>
-        <div className="absolute top-1/4 right-20 w-12 h-12 border border-white/5 rotate-45 abstract-shape animate-float-delayed"></div>
-        <div className="absolute bottom-1/3 left-1/4 w-20 h-20 border border-white/10 rounded-lg rotate-12 abstract-shape animate-pulse-slow"></div>
-        <div className="absolute top-1/2 right-1/3 w-8 h-8 bg-white/5 rounded-full abstract-shape animate-float"></div>
-        <div className="absolute bottom-20 right-10 w-14 h-14 border border-white/10 rotate-45 abstract-shape animate-float-delayed"></div>
-        <div className="absolute top-1/3 left-1/2 w-10 h-10 border border-white/5 rounded-full abstract-shape animate-pulse-slow"></div>
-      </div>
-
       {/* Hero Section */}
       <section
         id="hero"
@@ -240,7 +230,10 @@ export default function InternetStatusPage() {
               >
                 <CardContent className="p-4">
                   <div className="flex items-center gap-3 mb-2">
-                    <Circle className="w-4 h-4 text-white fill-current" />
+                    {key === "good" && <CheckCircle className="w-4 h-4 text-white" />}
+                    {key === "unstable" && <AlertTriangle className="w-4 h-4 text-white" />}
+                    {key === "intermittent" && <Signal className="w-4 h-4 text-white" />}
+                    {key === "poor" && <WifiOff className="w-4 h-4 text-white" />}
                     <span className="font-medium text-sm">{status.label}</span>
                   </div>
                   <p className="text-xs text-gray-400">{status.description}</p>

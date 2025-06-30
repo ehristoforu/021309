@@ -316,7 +316,7 @@ export default function VPNPage() {
         </div>
       </footer>
 
-      {/* Server Key Dialog */}
+      {/* Server Key Dialog - Centered */}
       <Dialog
         open={!!selectedServer}
         onOpenChange={() => {
@@ -324,7 +324,7 @@ export default function VPNPage() {
           setIsLoading(false)
         }}
       >
-        <DialogContent className="bg-black border-white/20 text-white max-w-md mx-4 animate-fade-in-up">
+        <DialogContent className="bg-black border-white/20 text-white max-w-md mx-auto animate-fade-in-up fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
           <DialogHeader>
             <DialogTitle className="text-center">
               {isLoading ? "Подключение к серверу" : `Ключ сервера: ${selectedServer?.country}`}

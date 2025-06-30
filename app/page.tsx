@@ -18,6 +18,8 @@ import {
   Wifi,
   Calculator,
   Activity,
+  BookOpen,
+  Lock,
 } from "lucide-react"
 
 import blockedResourcesConfig from "../config/blocked-resources.json"
@@ -54,42 +56,44 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-black text-white relative overflow-hidden">
-      {/* Hero Background Icons */}
+      {/* Enhanced Hero Background Icons */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         {/* Statue of Liberty Icons */}
-        <div className="absolute top-20 left-16 w-12 h-12 opacity-20 hero-icon animate-icon-float">
+        <div className="absolute top-20 left-16 w-12 h-12 opacity-20 hero-icon animate-hero-float interactive-shape">
           <Scale className="w-full h-full text-white" />
         </div>
-        <div className="absolute top-1/3 right-20 w-16 h-16 opacity-15 hero-icon animate-icon-pulse delay-300">
+        <div className="absolute top-1/3 right-20 w-16 h-16 opacity-15 hero-icon animate-hero-pulse delay-300 interactive-shape">
           <Scale className="w-full h-full text-white" />
         </div>
-        <div className="absolute bottom-1/4 left-1/4 w-10 h-10 opacity-25 hero-icon animate-icon-float delay-500">
+        <div className="absolute bottom-1/4 left-1/4 w-10 h-10 opacity-25 hero-icon animate-hero-float delay-500 interactive-shape">
           <Scale className="w-full h-full text-white" />
         </div>
 
         {/* WiFi Icons */}
-        <div className="absolute top-1/4 left-1/3 w-14 h-14 opacity-20 hero-icon animate-icon-pulse">
+        <div className="absolute top-1/4 left-1/3 w-14 h-14 opacity-20 hero-icon animate-hero-pulse interactive-shape">
           <Wifi className="w-full h-full text-white" />
         </div>
-        <div className="absolute bottom-1/3 right-1/4 w-12 h-12 opacity-15 hero-icon animate-icon-float delay-700">
+        <div className="absolute bottom-1/3 right-1/4 w-12 h-12 opacity-15 hero-icon animate-hero-float delay-700 interactive-shape">
           <Wifi className="w-full h-full text-white" />
         </div>
-        <div className="absolute top-1/2 right-1/3 w-8 h-8 opacity-30 hero-icon animate-icon-pulse delay-200">
+        <div className="absolute top-1/2 right-1/3 w-8 h-8 opacity-30 hero-icon animate-hero-pulse delay-200 interactive-shape">
           <Wifi className="w-full h-full text-white" />
         </div>
 
         {/* Globe Icons */}
-        <div className="absolute bottom-20 left-20 w-10 h-10 opacity-20 hero-icon animate-icon-float delay-400">
+        <div className="absolute bottom-20 left-20 w-10 h-10 opacity-20 hero-icon animate-hero-float delay-400 interactive-shape">
           <Globe className="w-full h-full text-white" />
         </div>
-        <div className="absolute top-1/2 left-10 w-12 h-12 opacity-15 hero-icon animate-icon-pulse delay-600">
+        <div className="absolute top-1/2 left-10 w-12 h-12 opacity-15 hero-icon animate-hero-pulse delay-600 interactive-shape">
           <Globe className="w-full h-full text-white" />
         </div>
 
-        {/* Small abstract shapes */}
-        <div className="absolute top-32 right-32 w-6 h-6 border border-white/10 rounded-full abstract-shape animate-float opacity-30"></div>
-        <div className="absolute bottom-32 left-32 w-4 h-4 border border-white/10 rotate-45 abstract-shape animate-float-delayed opacity-20"></div>
-        <div className="absolute top-2/3 right-16 w-8 h-8 border border-white/10 rounded-lg rotate-12 abstract-shape animate-pulse-slow opacity-25"></div>
+        {/* Enhanced abstract shapes */}
+        <div className="absolute top-32 right-32 w-6 h-6 border border-white/10 rounded-full abstract-shape animate-hero-float opacity-30 interactive-shape"></div>
+        <div className="absolute bottom-32 left-32 w-4 h-4 border border-white/10 rotate-45 abstract-shape animate-hero-pulse opacity-20 interactive-shape"></div>
+        <div className="absolute top-2/3 right-16 w-8 h-8 border border-white/10 rounded-lg rotate-12 abstract-shape animate-hero-float opacity-25 interactive-shape"></div>
+        <div className="absolute top-1/5 left-2/3 w-12 h-12 border border-white/10 rounded-full abstract-shape animate-hero-pulse opacity-20 interactive-shape"></div>
+        <div className="absolute bottom-1/5 right-2/3 w-6 h-6 border border-white/10 rotate-45 abstract-shape animate-hero-float opacity-30 interactive-shape"></div>
       </div>
 
       {/* Hero Section */}
@@ -113,17 +117,19 @@ export default function HomePage() {
             <Link href="/materials">
               <Button
                 size="lg"
-                className="bg-white text-black hover:bg-gray-200 px-6 py-4 text-base transform hover:scale-105 transition-all duration-200 w-full"
+                variant="outline"
+                className="border-white text-white hover:bg-white hover:text-black px-6 py-4 text-base enhanced-button transform hover:scale-105 transition-all duration-200 bg-transparent w-full"
               >
+                <BookOpen className="w-4 h-4 mr-2" />
                 Материалы
               </Button>
             </Link>
             <Link href="/vpn">
               <Button
                 size="lg"
-                variant="outline"
-                className="border-white text-white hover:bg-white hover:text-black px-6 py-4 text-base transform hover:scale-105 transition-all duration-200 bg-transparent w-full"
+                className="bg-white text-black hover:bg-gray-200 px-6 py-4 text-base enhanced-button transform hover:scale-105 transition-all duration-200 w-full"
               >
+                <Lock className="w-4 h-4 mr-2" />
                 VPN
               </Button>
             </Link>
@@ -131,7 +137,7 @@ export default function HomePage() {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-white text-white hover:bg-white hover:text-black px-6 py-4 text-base transform hover:scale-105 transition-all duration-200 bg-transparent w-full"
+                className="border-white text-white hover:bg-white hover:text-black px-6 py-4 text-base enhanced-button transform hover:scale-105 transition-all duration-200 bg-transparent w-full"
               >
                 <Calculator className="w-4 h-4 mr-2" />
                 Калькулятор
@@ -141,7 +147,7 @@ export default function HomePage() {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-white text-white hover:bg-white hover:text-black px-6 py-4 text-base transform hover:scale-105 transition-all duration-200 bg-transparent w-full"
+                className="border-white text-white hover:bg-white hover:text-black px-6 py-4 text-base enhanced-button transform hover:scale-105 transition-all duration-200 bg-transparent w-full"
               >
                 <Activity className="w-4 h-4 mr-2" />
                 Статус
@@ -311,7 +317,8 @@ export default function HomePage() {
                 С нашими инструментами все эти ресурсы доступны без ограничений
               </p>
               <Link href="/vpn" className="inline-block mt-4">
-                <Button className="bg-white text-black hover:bg-gray-200 transform hover:scale-105 transition-all duration-200">
+                <Button className="bg-white text-black hover:bg-gray-200 enhanced-button transform hover:scale-105 transition-all duration-200">
+                  <Lock className="w-4 h-4 mr-2" />
                   Получить доступ
                 </Button>
               </Link>
