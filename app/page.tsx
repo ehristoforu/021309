@@ -1,44 +1,40 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect } from "react"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Badge } from "@/components/ui/badge"
-import { Copy, Zap, Shield, Server, Trash2, Github, Send, Download, Key, Wifi, Scale, FileText } from "lucide-react"
-import { toast } from "@/hooks/use-toast"
+import { AnimatedCounter } from "@/components/animated-counter"
+import {
+  Scale,
+  Shield,
+  Globe,
+  FileText,
+  ExternalLink,
+  Gavel,
+  Newspaper,
+  Building,
+  Wifi,
+  Calculator,
+  Activity,
+} from "lucide-react"
 
-import serversConfig from "../config/servers.json"
 import blockedResourcesConfig from "../config/blocked-resources.json"
-import legalDocumentsConfig from "../config/legal-documents.json"
+import legalArticlesConfig from "../config/legal-articles.json"
+import counterConfig from "../config/counter.json"
 
-// Конфигурация серверов
-const servers = serversConfig.servers
-
-// Конфигурация заблокированных ресурсов
 const blockedResources = blockedResourcesConfig.blockedResources
+const legalArticles = legalArticlesConfig.legalArticles
+const blockedCount = counterConfig.blockedResourcesCount
 
-// Правовые документы
-const legalDocuments = legalDocumentsConfig.legalDocuments
-
-export default function BaikalVPN() {
-  const [selectedServer, setSelectedServer] = useState<{ country: string; key: string } | null>(null)
-  const [isScrolled, setIsScrolled] = useState(false)
+export default function HomePage() {
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set())
-  const [isLoading, setIsLoading] = useState(false)
-  const [loadingDots, setLoadingDots] = useState(".")
-
-  const sectionsRef = useRef<{ [key: string]: HTMLElement | null }>({})
+  const [isLoaded, setIsLoaded] = useState(false)
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 100)
-    }
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+    setIsLoaded(true)
 
-  useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -50,299 +46,211 @@ export default function BaikalVPN() {
       { threshold: 0.1, rootMargin: "0px 0px -100px 0px" },
     )
 
-    Object.values(sectionsRef.current).forEach((section) => {
-      if (section) observer.observe(section)
-    })
+    const sections = document.querySelectorAll("[data-section]")
+    sections.forEach((section) => observer.observe(section))
 
     return () => observer.disconnect()
   }, [])
 
-  useEffect(() => {
-    let interval: NodeJS.Timeout
-    if (isLoading) {
-      interval = setInterval(() => {
-        setLoadingDots((prev) => {
-          if (prev === "...") return "."
-          if (prev === ".") return ".."
-          return "..."
-        })
-      }, 500)
-    }
-    return () => clearInterval(interval)
-  }, [isLoading])
-
-  const scrollToStations = () => {
-    const element = document.getElementById("stations")
-    if (element) {
-      element.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      })
-    }
-  }
-
-  const copyToClipboard = async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text)
-      toast({
-        title: "✅ Ключ скопирован!",
-        description: "Ключ сервера успешно скопирован в буфер обмена",
-        duration: 3000,
-      })
-    } catch (err) {
-      // Fallback для старых браузеров
-      const textArea = document.createElement("textarea")
-      textArea.value = text
-      document.body.appendChild(textArea)
-      textArea.focus()
-      textArea.select()
-      try {
-        document.execCommand("copy")
-        toast({
-          title: "✅ Ключ скопирован!",
-          description: "Ключ сервера успешно скопирован в буфер обмена",
-          duration: 3000,
-        })
-      } catch (fallbackErr) {
-        toast({
-          title: "❌ Ошибка копирования",
-          description: "Не удалось скопировать ключ. Попробуйте выделить и скопировать вручную.",
-          variant: "destructive",
-          duration: 5000,
-        })
-      }
-      document.body.removeChild(textArea)
-    }
-  }
-
-  const setSectionRef = (id: string) => (el: HTMLElement | null) => {
-    sectionsRef.current[id] = el
-  }
-
-  const handleServerClick = (server: { country: string; key: string }) => {
-    setSelectedServer(server)
-    setIsLoading(true)
-    setLoadingDots(".")
-
-    setTimeout(() => {
-      setIsLoading(false)
-    }, 5000)
-  }
-
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-900 via-blue-800 to-blue-900">
-      {/* Fixed Navigation */}
-      <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled ? "bg-blue-900/95 backdrop-blur-lg border-b border-white/10" : "bg-transparent"
-        }`}
-      >
-        <div className="max-w-6xl mx-auto px-4 py-3">
-          <div className="flex items-center justify-center">
-            <div className="flex items-center space-x-2">
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center overflow-hidden backdrop-blur-sm hover:scale-110 hover:bg-white/20 transition-all duration-500 ease-out cursor-pointer group">
-                <img
-                  src="/images/logo.png"
-                  alt="Baikal VPN Logo"
-                  className="w-10 h-10 object-contain group-hover:scale-105 transition-transform duration-500 ease-out"
-                />
-              </div>
-              <span className="text-white font-bold text-lg">Baikal VPN</span>
-            </div>
-          </div>
+    <div className="min-h-screen bg-black text-white relative overflow-hidden">
+      {/* Hero Background Icons */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        {/* Statue of Liberty Icons */}
+        <div className="absolute top-20 left-16 w-12 h-12 opacity-20 hero-icon animate-icon-float">
+          <Scale className="w-full h-full text-white" />
         </div>
-      </nav>
+        <div className="absolute top-1/3 right-20 w-16 h-16 opacity-15 hero-icon animate-icon-pulse delay-300">
+          <Scale className="w-full h-full text-white" />
+        </div>
+        <div className="absolute bottom-1/4 left-1/4 w-10 h-10 opacity-25 hero-icon animate-icon-float delay-500">
+          <Scale className="w-full h-full text-white" />
+        </div>
+
+        {/* WiFi Icons */}
+        <div className="absolute top-1/4 left-1/3 w-14 h-14 opacity-20 hero-icon animate-icon-pulse">
+          <Wifi className="w-full h-full text-white" />
+        </div>
+        <div className="absolute bottom-1/3 right-1/4 w-12 h-12 opacity-15 hero-icon animate-icon-float delay-700">
+          <Wifi className="w-full h-full text-white" />
+        </div>
+        <div className="absolute top-1/2 right-1/3 w-8 h-8 opacity-30 hero-icon animate-icon-pulse delay-200">
+          <Wifi className="w-full h-full text-white" />
+        </div>
+
+        {/* Globe Icons */}
+        <div className="absolute bottom-20 left-20 w-10 h-10 opacity-20 hero-icon animate-icon-float delay-400">
+          <Globe className="w-full h-full text-white" />
+        </div>
+        <div className="absolute top-1/2 left-10 w-12 h-12 opacity-15 hero-icon animate-icon-pulse delay-600">
+          <Globe className="w-full h-full text-white" />
+        </div>
+
+        {/* Small abstract shapes */}
+        <div className="absolute top-32 right-32 w-6 h-6 border border-white/10 rounded-full abstract-shape animate-float opacity-30"></div>
+        <div className="absolute bottom-32 left-32 w-4 h-4 border border-white/10 rotate-45 abstract-shape animate-float-delayed opacity-20"></div>
+        <div className="absolute top-2/3 right-16 w-8 h-8 border border-white/10 rounded-lg rotate-12 abstract-shape animate-pulse-slow opacity-25"></div>
+      </div>
 
       {/* Hero Section */}
-      <section className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden px-4">
-        {/* Animated background */}
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-1/4 left-1/4 w-32 md:w-64 h-32 md:h-64 bg-blue-400 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-48 md:w-96 h-48 md:h-96 bg-cyan-400 rounded-full blur-3xl animate-pulse delay-1000"></div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-40 md:w-80 h-40 md:h-80 bg-blue-300 rounded-full blur-3xl animate-pulse delay-500"></div>
-        </div>
-
-        <div className="text-center z-10">
-          <h1 className="text-4xl md:text-6xl lg:text-8xl font-bold text-white mb-4 md:mb-6 animate-fade-in">
-            Baikal VPN
+      <section
+        className={`min-h-screen flex items-center justify-center relative overflow-hidden transition-all duration-1000 ${
+          isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+        }`}
+      >
+        <div className="text-center z-10 max-w-4xl mx-auto px-4">
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-8 animate-fade-in-up">
+            Свобода в интернете
+            <br />
+            <span className="text-gray-300">возможна!</span>
           </h1>
-          <p className="text-lg md:text-xl lg:text-2xl text-blue-100 mb-8 md:mb-12 max-w-2xl mx-auto leading-relaxed px-4">
-            Скройся в глубинах Байкала — защити свою свободу
+
+          <p className="text-xl md:text-2xl text-gray-400 mb-12 max-w-2xl mx-auto leading-relaxed animate-fade-in-up delay-300">
+            Мультисервис интернет активизма для защиты цифровых прав и свобод
           </p>
 
-          <Button
-            onClick={scrollToStations}
-            size="lg"
-            className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white px-6 md:px-8 py-3 md:py-4 text-base md:text-lg rounded-full shadow-2xl transform hover:scale-105 transition-all duration-300 animate-bounce"
-          >
-            🌊 Погрузиться
-          </Button>
-        </div>
-
-        {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <div className="w-6 h-10 border-2 border-white rounded-full flex justify-center">
-            <div className="w-1 h-3 bg-white rounded-full mt-2 animate-pulse"></div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 justify-center animate-fade-in-up delay-500 mb-8">
+            <Link href="/materials">
+              <Button
+                size="lg"
+                className="bg-white text-black hover:bg-gray-200 px-6 py-4 text-base transform hover:scale-105 transition-all duration-200 w-full"
+              >
+                Материалы
+              </Button>
+            </Link>
+            <Link href="/vpn">
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-white text-white hover:bg-white hover:text-black px-6 py-4 text-base transform hover:scale-105 transition-all duration-200 bg-transparent w-full"
+              >
+                VPN
+              </Button>
+            </Link>
+            <Link href="/freedom-calculator">
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-white text-white hover:bg-white hover:text-black px-6 py-4 text-base transform hover:scale-105 transition-all duration-200 bg-transparent w-full"
+              >
+                <Calculator className="w-4 h-4 mr-2" />
+                Калькулятор
+              </Button>
+            </Link>
+            <Link href="/internet-status">
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-white text-white hover:bg-white hover:text-black px-6 py-4 text-base transform hover:scale-105 transition-all duration-200 bg-transparent w-full"
+              >
+                <Activity className="w-4 h-4 mr-2" />
+                Статус
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* Stations Section */}
+      {/* About Section */}
       <section
-        id="stations"
-        ref={setSectionRef("stations")}
-        className={`py-12 md:py-20 px-4 transition-all duration-1000 ${
-          visibleSections.has("stations") ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+        id="about"
+        data-section
+        className={`py-20 px-4 border-t border-white/10 transition-all duration-1000 relative z-10 ${
+          visibleSections.has("about") ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
         }`}
       >
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white text-center mb-4">🚉 Станции</h2>
-          <p className="text-blue-100 text-center mb-8 md:mb-12 text-base md:text-lg px-4">
-            Выберите сервер для подключения
-          </p>
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 animate-fade-in-up">О нас</h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-            {servers.map((server, index) => (
-              <Card
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              {
+                icon: <Scale className="w-12 h-12 text-white" />,
+                title: "Правовая защита",
+                description:
+                  "Защищаем цифровые права граждан на основе международного права и конституционных гарантий",
+              },
+              {
+                icon: <Shield className="w-12 h-12 text-white" />,
+                title: "Технологическая свобода",
+                description: "Предоставляем инструменты для обхода цензуры и защиты приватности в интернете",
+              },
+              {
+                icon: <Globe className="w-12 h-12 text-white" />,
+                title: "Глобальная миссия",
+                description: "Работаем над созданием свободного и открытого интернета для всех людей планеты",
+              },
+            ].map((item, index) => (
+              <div
                 key={index}
-                className="bg-white/10 backdrop-blur-lg border-white/20 hover:bg-white/20 transition-all duration-300 transform hover:scale-105"
+                className={`text-center transition-all duration-700 ${
+                  visibleSections.has("about") ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+                }`}
+                style={{ transitionDelay: `${index * 200}ms` }}
               >
-                <CardContent className="p-4 md:p-6">
-                  <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-                    <span className="text-white font-semibold text-base md:text-lg text-center sm:text-left">
-                      {server.country}
-                    </span>
-                    <Button
-                      onClick={() => handleServerClick(server)}
-                      className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 w-full sm:w-auto"
-                      size="sm"
-                    >
-                      Подключиться
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+                <div className="w-16 h-16 mx-auto mb-6 flex items-center justify-center transform hover:scale-110 transition-transform duration-300">
+                  {item.icon}
+                </div>
+                <h3 className="text-xl font-semibold mb-4">{item.title}</h3>
+                <p className="text-gray-400 leading-relaxed">{item.description}</p>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Instructions Section */}
+      {/* Goals Section */}
       <section
-        id="instructions"
-        ref={setSectionRef("instructions")}
-        className={`py-12 md:py-20 px-4 bg-black/20 transition-all duration-1000 delay-200 ${
-          visibleSections.has("instructions") ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+        id="goals"
+        data-section
+        className={`py-20 px-4 bg-white/5 backdrop-blur-sm relative z-10 transition-all duration-1000 ${
+          visibleSections.has("goals") ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
         }`}
       >
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white text-center mb-8 md:mb-16">
-            📱 Инструкция
-          </h2>
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-16">Цели</h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Download className="w-8 h-8 text-white" />
-              </div>
-              <h3 className="text-lg md:text-xl font-bold text-white mb-2">1. Скачать клиент</h3>
-              <p className="text-blue-100 text-sm md:text-base mb-4">Outline VPN Client или Potatso VPN Client</p>
-              <div className="space-y-2">
-                <a
-                  href="https://getoutline.org/get-started/#step-3"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block text-cyan-300 hover:text-cyan-200 text-sm underline"
-                >
-                  Outline VPN
-                </a>
-                <a
-                  href="https://www.potatso.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block text-cyan-300 hover:text-cyan-200 text-sm underline"
-                >
-                  Potatso VPN
-                </a>
-              </div>
-            </div>
-
-            <div className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Key className="w-8 h-8 text-white" />
-              </div>
-              <h3 className="text-lg md:text-xl font-bold text-white mb-2">2. Ввести ключ</h3>
-              <p className="text-blue-100 text-sm md:text-base">
-                Скопируйте ключ из раздела "Станции" и вставьте в приложение
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-teal-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Wifi className="w-8 h-8 text-white" />
-              </div>
-              <h3 className="text-lg md:text-xl font-bold text-white mb-2">3. Подключиться</h3>
-              <p className="text-blue-100 text-sm md:text-base">
-                Нажмите кнопку подключения и пользуйтесь свободным интернетом
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Server className="w-8 h-8 text-white" />
-              </div>
-              <h3 className="text-lg md:text-xl font-bold text-white mb-2">Если ошибка</h3>
-              <p className="text-blue-100 text-sm md:text-base">Попробуйте другой ключ из списка серверов</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Advantages Section */}
-      <section
-        id="advantages"
-        ref={setSectionRef("advantages")}
-        className={`py-12 md:py-20 px-4 transition-all duration-1000 delay-300 ${
-          visibleSections.has("advantages") ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-        }`}
-      >
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white text-center mb-12 md:mb-16">
-            ⚡ Преимущества
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Zap className="w-8 h-8 text-white" />
-              </div>
-              <h3 className="text-lg md:text-xl font-bold text-white mb-2">Быстрота</h3>
-              <p className="text-blue-100 text-sm md:text-base">Высокая скорость соединения без задержек</p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Shield className="w-8 h-8 text-white" />
-              </div>
-              <h3 className="text-lg md:text-xl font-bold text-white mb-2">Shadowsocks</h3>
-              <p className="text-blue-100 text-sm md:text-base">Современный протокол обхода блокировок</p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-teal-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Server className="w-8 h-8 text-white" />
-              </div>
-              <h3 className="text-lg md:text-xl font-bold text-white mb-2">Децентрализация</h3>
-              <p className="text-blue-100 text-sm md:text-base">Распределённые сервера по всему миру</p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-r from-red-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Trash2 className="w-8 h-8 text-white" />
-              </div>
-              <h3 className="text-lg md:text-xl font-bold text-white mb-2">Очистка кэша</h3>
-              <p className="text-blue-100 text-sm md:text-base">Постоянная очистка кэша с серверов</p>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {[
+              {
+                icon: <Gavel className="w-8 h-8 mb-4" />,
+                title: "Борьба с незаконной цензурой РКН",
+                description:
+                  "Боремся с незаконной цензурной политикой Роскомнадзора и цензурой путинского режима. Защищаем право граждан на свободный доступ к информации.",
+              },
+              {
+                icon: <Newspaper className="w-8 h-8 mb-4" />,
+                title: "Защита независимых СМИ",
+                description:
+                  "Выступаем против закрытия независимых СМИ и интернет-ресурсов. Поддерживаем журналистов и медиа, которые освещают правду.",
+              },
+              {
+                icon: <Building className="w-8 h-8 mb-4" />,
+                title: "Свободный рынок интернет-ресурсов",
+                description:
+                  "Выступаем за свободный рынок интернет-ресурсов без государственного вмешательства. Поддерживаем конкуренцию и инновации в цифровой сфере.",
+              },
+              {
+                icon: <Globe className="w-8 h-8 mb-4" />,
+                title: "Международное сотрудничество",
+                description:
+                  "Сотрудничаем с международными организациями по защите прав человека и цифровых свобод в борьбе с авторитаризмом.",
+              },
+            ].map((item, index) => (
+              <Card
+                key={index}
+                className={`bg-black/50 border-white/10 hover:bg-black/70 transition-all duration-500 transform hover:scale-105 backdrop-blur-sm ${
+                  visibleSections.has("goals") ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+                }`}
+                style={{ transitionDelay: `${index * 150}ms` }}
+              >
+                <CardContent className="p-8">
+                  {item.icon}
+                  <h3 className="text-xl font-semibold mb-4">{item.title}</h3>
+                  <p className="text-gray-400 leading-relaxed">{item.description}</p>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
       </section>
@@ -350,37 +258,63 @@ export default function BaikalVPN() {
       {/* Blocked Resources Section */}
       <section
         id="blocked"
-        ref={setSectionRef("blocked")}
-        className={`py-12 md:py-20 px-4 bg-black/20 transition-all duration-1000 delay-400 ${
+        data-section
+        className={`py-20 px-4 transition-all duration-1000 relative z-10 ${
           visibleSections.has("blocked") ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
         }`}
       >
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white text-center mb-4">😔 Сочувствуем</h2>
-          <p className="text-blue-100 text-center mb-8 md:mb-12 text-base md:text-lg px-4">
-            Мы осуждаем незаконную блокировку всех ресурсов и даём гарантии доступа к ним бесплатно навсегда
+          {/* Counter Section */}
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center justify-center mb-6">
+              <div className="text-6xl md:text-8xl font-bold text-white">
+                <AnimatedCounter end={blockedCount} duration={2500} showApprox={true} />
+              </div>
+            </div>
+            <p className="text-xl text-gray-400 mb-4">заблокированных ресурсов</p>
+            <div className="w-24 h-1 bg-white mx-auto rounded-full"></div>
+          </div>
+
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-8">Заблокированные ресурсы</h2>
+          <p className="text-gray-400 text-center mb-12 text-lg max-w-3xl mx-auto">
+            Мы осуждаем незаконную блокировку интернет-ресурсов и предоставляем инструменты для восстановления доступа
           </p>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-4 mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-12">
             {blockedResources.map((resource, index) => (
               <Card
                 key={index}
-                className="bg-white/10 backdrop-blur-lg border-white/20 hover:bg-white/20 transition-all duration-300"
+                className={`bg-black/30 border-white/10 hover:bg-black/50 transition-all duration-500 transform hover:scale-105 backdrop-blur-sm ${
+                  visibleSections.has("blocked") ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+                }`}
+                style={{ transitionDelay: `${index * 50}ms` }}
               >
-                <CardContent className="p-3 md:p-4 text-center">
-                  <div className="text-2xl md:text-3xl mb-2">{resource.icon}</div>
-                  <h3 className="text-white font-semibold mb-2 text-sm md:text-base">{resource.name}</h3>
-                  <Badge className={`${resource.color} text-white animate-pulse text-xs`}>{resource.status}</Badge>
+                <CardContent className="p-4 text-center">
+                  <div className="text-2xl mb-2">{resource.icon}</div>
+                  <h3 className="text-white font-medium mb-2 text-sm">{resource.name}</h3>
+                  <Badge variant="outline" className="text-xs border-white/20 text-gray-300">
+                    {resource.status}
+                  </Badge>
                 </CardContent>
               </Card>
             ))}
           </div>
 
-          <div className="text-center">
-            <div className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 backdrop-blur-lg rounded-lg p-4 md:p-6 border border-green-500/30">
-              <p className="text-green-100 text-base md:text-lg font-semibold">
-                🛡️ С Baikal VPN все эти ресурсы доступны без ограничений!
+          <div
+            className={`text-center transition-all duration-700 ${
+              visibleSections.has("blocked") ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+            }`}
+            style={{ transitionDelay: "800ms" }}
+          >
+            <div className="bg-white/5 border border-white/10 rounded-lg p-6 max-w-2xl mx-auto backdrop-blur-sm">
+              <p className="text-white font-medium text-lg">
+                С нашими инструментами все эти ресурсы доступны без ограничений
               </p>
+              <Link href="/vpn" className="inline-block mt-4">
+                <Button className="bg-white text-black hover:bg-gray-200 transform hover:scale-105 transition-all duration-200">
+                  Получить доступ
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
@@ -389,43 +323,56 @@ export default function BaikalVPN() {
       {/* Legal Section */}
       <section
         id="legal"
-        ref={setSectionRef("legal")}
-        className={`py-12 md:py-20 px-4 transition-all duration-1000 delay-500 ${
+        data-section
+        className={`py-20 px-4 bg-white/5 backdrop-blur-sm relative z-10 transition-all duration-1000 ${
           visibleSections.has("legal") ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
         }`}
       >
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white text-center mb-4">⚖️ Правовая основа</h2>
-          <p className="text-blue-100 text-center mb-8 md:mb-12 text-base md:text-lg px-4">
-            Использование VPN и свободных технологий защищено международным правом
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-8">Правовая основа</h2>
+          <p className="text-gray-400 text-center mb-12 text-lg max-w-3xl mx-auto">
+            Наша деятельность основана на международном праве и конституционных гарантиях
           </p>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
-            {legalDocuments.map((doc, index) => (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {legalArticles.map((article, index) => (
               <Card
                 key={index}
-                className="bg-white/10 backdrop-blur-lg border-white/20 hover:bg-white/20 transition-all duration-300"
+                className={`bg-black/50 border-white/10 hover:bg-black/70 transition-all duration-500 transform hover:scale-105 backdrop-blur-sm ${
+                  visibleSections.has("legal") ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+                }`}
+                style={{ transitionDelay: `${index * 200}ms` }}
               >
-                <CardContent className="p-4 md:p-6">
-                  <div className="text-center mb-4">
-                    <div className="text-4xl md:text-5xl mb-2">{doc.icon}</div>
-                    <h3 className="text-white font-bold text-base md:text-lg mb-1">{doc.title}</h3>
-                    <Badge className="bg-blue-500/20 text-blue-100 border-blue-500/30">{doc.article}</Badge>
+                <CardContent className="p-8">
+                  <div className="flex items-start gap-4 mb-4">
+                    <FileText className="w-6 h-6 mt-1 flex-shrink-0" />
+                    <div>
+                      <h3 className="text-lg font-semibold mb-1">{article.title}</h3>
+                      <Badge variant="outline" className="text-xs border-white/20 text-gray-300">
+                        {article.article}
+                      </Badge>
+                    </div>
                   </div>
-                  <p className="text-blue-100 text-sm md:text-base leading-relaxed">{doc.text}</p>
+                  <p className="text-gray-300 leading-relaxed mb-4">{article.text}</p>
+                  <p className="text-sm text-gray-500">{article.source}</p>
                 </CardContent>
               </Card>
             ))}
           </div>
 
-          <div className="text-center mt-8 md:mt-12">
-            <div className="bg-gradient-to-r from-blue-500/20 to-purple-500/20 backdrop-blur-lg rounded-lg p-4 md:p-6 border border-blue-500/30">
-              <div className="flex items-center justify-center mb-3">
-                <Scale className="w-6 h-6 text-blue-300 mr-2" />
-                <FileText className="w-6 h-6 text-blue-300" />
+          <div
+            className={`text-center mt-12 transition-all duration-700 ${
+              visibleSections.has("legal") ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+            }`}
+            style={{ transitionDelay: "600ms" }}
+          >
+            <div className="bg-black/50 border border-white/10 rounded-lg p-6 max-w-4xl mx-auto backdrop-blur-sm">
+              <div className="flex items-center justify-center mb-4">
+                <Scale className="w-8 h-8 mr-3" />
+                <FileText className="w-8 h-8" />
               </div>
-              <p className="text-blue-100 text-base md:text-lg font-semibold">
-                Право на свободу информации, слова, мнения, контента и технологий защищено международными конвенциями и
+              <p className="text-white font-medium text-lg">
+                Право на свободу информации, слова и доступа к интернету защищено международными конвенциями и
                 конституциями большинства стран мира
               </p>
             </div>
@@ -434,89 +381,49 @@ export default function BaikalVPN() {
       </section>
 
       {/* Footer */}
-      <footer className="py-8 md:py-12 px-4 bg-black/30 border-t border-white/10">
-        <div className="max-w-6xl mx-auto text-center">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+      <footer className="py-12 px-4 border-t border-white/10 relative z-10">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="text-center md:text-left">
-              <p className="text-white font-semibold">Разработчик: ehristoforu</p>
-              <p className="text-blue-100 text-sm">© 2025 Baikal VPN. Все права защищены.</p>
+              <div className="text-2xl font-bold mb-2">eh</div>
+              <p className="text-gray-400">Свобода в интернете возможна</p>
+              <p className="text-sm text-gray-500 mt-2">© 2025 eh. Все права защищены.</p>
             </div>
 
-            <div className="flex space-x-4">
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Link
+                href="/materials"
+                className="text-gray-400 hover:text-white transition-colors transform hover:scale-105"
+              >
+                Материалы
+              </Link>
+              <Link href="/vpn" className="text-gray-400 hover:text-white transition-colors transform hover:scale-105">
+                VPN
+              </Link>
+              <Link
+                href="/freedom-calculator"
+                className="text-gray-400 hover:text-white transition-colors transform hover:scale-105"
+              >
+                Калькулятор свободы
+              </Link>
+              <Link
+                href="/internet-status"
+                className="text-gray-400 hover:text-white transition-colors transform hover:scale-105"
+              >
+                Статус интернета
+              </Link>
               <a
                 href="https://t.me/ehristoforu_ai"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center space-x-2 text-blue-100 hover:text-white transition-colors"
+                className="text-gray-400 hover:text-white transition-colors flex items-center gap-2 transform hover:scale-105"
               >
-                <Send className="w-5 h-5" />
-                <span>Telegram</span>
-              </a>
-              <a
-                href="https://github.com/ehristoforu"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center space-x-2 text-blue-100 hover:text-white transition-colors"
-              >
-                <Github className="w-5 h-5" />
-                <span>GitHub</span>
+                Telegram <ExternalLink className="w-4 h-4" />
               </a>
             </div>
           </div>
         </div>
       </footer>
-
-      {/* Server Key Dialog */}
-      <Dialog
-        open={!!selectedServer}
-        onOpenChange={() => {
-          setSelectedServer(null)
-          setIsLoading(false)
-        }}
-      >
-        <DialogContent className="bg-gradient-to-br from-blue-900 to-blue-800 border-blue-500/30 text-white max-w-md mx-4">
-          <DialogHeader>
-            <DialogTitle className="text-center">
-              {isLoading ? "Подключение к серверу" : `Ключ сервера: ${selectedServer?.country}`}
-            </DialogTitle>
-          </DialogHeader>
-
-          <div className="space-y-4">
-            {isLoading ? (
-              <div className="text-center py-8">
-                {/* Анимация воды */}
-                <div className="relative w-20 h-20 mx-auto mb-4">
-                  <div className="absolute inset-0 bg-gradient-to-t from-blue-500 to-cyan-400 rounded-full animate-pulse"></div>
-                  <div className="absolute inset-2 bg-gradient-to-t from-blue-400 to-cyan-300 rounded-full animate-bounce delay-100"></div>
-                  <div className="absolute inset-4 bg-gradient-to-t from-blue-300 to-cyan-200 rounded-full animate-pulse delay-200"></div>
-                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-2xl">
-                    🌊
-                  </div>
-                </div>
-                <p className="text-blue-100 text-lg">Ищем ключ в глубинах Байкала{loadingDots}</p>
-              </div>
-            ) : (
-              <>
-                <div className="bg-black/30 p-3 md:p-4 rounded-lg border border-blue-500/30">
-                  <code className="text-xs md:text-sm text-blue-100 break-all block">{selectedServer?.key}</code>
-                </div>
-
-                <Button
-                  onClick={() => selectedServer && copyToClipboard(selectedServer.key)}
-                  className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600"
-                >
-                  <Copy className="w-4 h-4 mr-2" />
-                  Скопировать ключ
-                </Button>
-
-                <p className="text-xs md:text-sm text-blue-100 text-center">
-                  Скопируйте ключ и вставьте его в ваш Shadowsocks клиент
-                </p>
-              </>
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   )
 }
